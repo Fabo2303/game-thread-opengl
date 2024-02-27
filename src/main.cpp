@@ -1,25 +1,47 @@
 #include <gl/freeglut.h>
+#include <string>
+#include "./characters/defender.cpp"
+#include "./utils/operations.cpp"
+
+Defender defender(500);
+Operations operation;
+int level = 0;
+bool isChangeLevel = true;
 
 void teclado(unsigned char key, int x, int y)
 {
   switch (key)
   {
   case 'd':
-    // Mover a la derecha
+    defender.moveRight(10);
     break;
   case 'a':
-    // Mover a la izquierda
+    defender.moveLeft(10);
     break;
   case ' ':
-    // Disparar
+    operation.shoot(defender.getXOffset());
     break;
   }
   glutPostRedisplay();
 }
 
-void update(int value){
-  // Actualizar el juego
-  glutTimerFunc(1000/60, update, 0);
+void updateLevel()
+{
+  while (level <= 2)
+  {
+    if (!operation.isGameChangeLevel() && isChangeLevel && level <= 2)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      level++;
+      isChangeLevel = false;
+      printf("Level: %d\n", level);
+    }
+  }
+}
+
+void update(int value)
+{
+  glutTimerFunc(1000 / 60, update, 0);
 }
 
 void display()
@@ -27,6 +49,33 @@ void display()
   glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(0, 0, 0.5, 0.8);
   glLoadIdentity();
+  defender.draw();
+  if (operation.isGameChangeLevel())
+  {
+    operation.drawBoss();
+    operation.drawEnemy();
+    operation.drawBullets();
+    operation.collisionDefenderBulletBoss(defender.getXOffset());
+    isChangeLevel = true;
+  }
+  else
+  {
+    if (level > 0 && level <= 3 && !isChangeLevel)
+    {
+      operation.startGame(level);
+    }
+    else
+    {
+      if (level == 3)
+      {
+        drawText(650, 500, "YOU WIN");
+      }
+      else
+      {
+        drawLevel(650, 500, level + 1);
+      }
+    }
+  }
   glFlush();
   glutPostRedisplay();
   glutSwapBuffers();
@@ -51,6 +100,7 @@ int main(int argc, char **argv)
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutKeyboardFunc(teclado);
+  std::thread levelThread(updateLevel);
   glutMainLoop();
   return 0;
 }

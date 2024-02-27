@@ -1,6 +1,7 @@
 # Visual Studio Code
 .vscode/
-*.code-workspace
+*.exe
+
 
 
 
