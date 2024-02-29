@@ -11,6 +11,10 @@ Se aplicó:
 - Aplicación de semáforos.
 - Aplicación de variables de condición.
 
+## Características principales
+
+Este juego trata sobre una nave que se va a encargar de eliminar a los alienígenas que vienen a destruir la tierra, consta de tres niveles, en los dos primeros vienen alienígenas comunes y en el último nivel aparece el jefe final, este enemigo puede ser eliminado con 8 balas. Puedes ir de derecha a izquierda con las teclas 'a' y 'd', también puedes disparar con la barra espaciadora.
+
 ## Herramientas utilizadas
 - OpenGL para manejar los gráficos.
 - PisKel para los sprites a mostrar.
