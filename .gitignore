@@ -1,0 +1,19 @@
+# Build
+build/
+*.exe
+*.out
+*.o
+*.obj
+
+# Editor/IDE
+.vscode/
+*.log
+*.swp
+*.swo
+*.tmp
+
+# Mac
+.DS_Store
+
+# Backup files
+*~
