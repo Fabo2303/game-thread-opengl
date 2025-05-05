@@ -1,35 +1,38 @@
 #include <GL/freeglut.h>
 #include <iostream>
+#include "../include/utils/drawUtils.h"
 
-// Función para manejar la visualización
-void display() {
+void display()
+{
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Configura el color de dibujo (rojo)
-    glColor3f(1.0f, 0.0f, 0.0f);
+    drawSquare(0.0f, 0.0f, 5.0f);
 
-    // Dibuja un triángulo
-    glBegin(GL_TRIANGLES);
-        glVertex2f(0.0f, 0.5f);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-    glEnd();
+    drawLevel(-2.5f, 3.0f, 1);
 
-    glutSwapBuffers(); // Cambia los buffers de la ventana
+    glutSwapBuffers();
 }
 
-// Función principal
-int main(int argc, char** argv) {
-    // Inicializa GLUT
+void reshape(int w, int h)
+{
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glOrtho(-10.0, 10.0, -10.0, 10.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+int main(int argc, char** argv)
+{
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(800, 600);
-    glutCreateWindow("Test OpenGL");
 
-    // Configura la función de visualización
+    glutCreateWindow("Juego OpenGL");
+
     glutDisplayFunc(display);
-
-    // Inicia el bucle principal de GLUT
+    glutReshapeFunc(reshape);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glutMainLoop();
 
     return 0;
