@@ -1,34 +1,33 @@
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -Wall -std=c++17 -Iinclude
-
-# Output
-BUILD_DIR = build
-BIN = $(BUILD_DIR)/main
-
-# Source files
+CC = g++
+CFLAGS = -Wall -std=c++17
+INC = -Iinclude
+LIBS = -lGL -lGLU -lglut -lpthread
 SRC_DIR = src
-SRCS = $(shell find $(SRC_DIR) -name '*.cpp')
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+BUILD_DIR = build
+OBJ_DIR = build/objects
+CHARACTER_OBJ_DIR = $(OBJ_DIR)/characters
+UTILS_OBJ_DIR = $(OBJ_DIR)/utils
 
-# Libraries
-LIBS = -lGL -lGLU -lglut -lGLEW -lpthread
+# Archivos fuente y objetos
+SOURCES = $(wildcard $(SRC_DIR)/utils/*.cpp) $(wildcard $(SRC_DIR)/characters/*.cpp) $(SRC_DIR)/main.cpp
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-# Default target
-all: $(BIN)
+# Nombre del ejecutable
+EXEC = main
 
-# Create binary
-$(BIN): $(OBJS)
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LIBS)
+# Regla para compilar el ejecutable
+$(EXEC): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(BUILD_DIR)/$(EXEC) $(LIBS)
 
-# Create build objects
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Regla para compilar archivos fuente .cpp a objetos .o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)  # Crea el directorio para el archivo .o
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-# Clean build files
+# Limpiar los archivos generados
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(OBJ_DIR)/*.o $(BUILD_DIR)/$(EXEC)
 
-.PHONY: all clean
+# Regla para crear el directorio principal de objetos si no existe
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
